@@ -43,7 +43,6 @@ function init() {
       td.setAttribute("id", cell.id);
       td.addEventListener("click", function () {
         this.classList.add("circle");
-        this.cat = true;
         shift(Number(this.id));
       });
       tr.appendChild(td);
@@ -58,7 +57,10 @@ function init() {
 function shift(coord) {
   let y = Math.floor(coord / n);
   let x = coord - y * m;
-  dfs(x, y, "", 0);
+  let hash = {};
+  cells[y][x].cat = true;
+  cells[y][x].block.classList.add("circle");
+  dfs(y, x, "", 0, hash, "");
 }
 
 const dirs = [
@@ -66,32 +68,42 @@ const dirs = [
   [1, 0],
   [-1, 0],
   [0, -1],
-  [-1, -1],
+  [1, 1],
   [1, -1],
   [-1, 1],
-  [1, 1],
+  [-1, -1],
 ];
-const dirLabels = ["dul", "u", "dur", "r", "ddr", "d", "ddl", "l"];
+const dirsLabels = ["a", "b", "c", "d", "e", "f", "g", "k"];
 
-function dfs(x, y, direction, len) {
-  if (x < 0 || x === n || y < 0 || y === m || len === 3) return;
-  if (len === 0 || let === 1) {
-    if (cells[x][y].cat === true) {
-      console.log("7");
-
-      cells[x][y].cat = false;
-      cells[x][y].block.classList.remove("circle");
-      for (let i = 0; i < dirs.length; i++) {
-        if (direction === "" || direction === dirLabels[i]) {
-          dfs(x + dirs[i][0], y + dirs[i][1], dirLabels[i], len + 1);
-        }
+function dfs(x, y, direction, len, hash, desire) {
+  if (
+    x < 0 ||
+    x === n ||
+    y < 0 ||
+    y === m ||
+    len === 3 ||
+    hash.hasOwnProperty([x, y])
+  )
+    return;
+  if (len === 2 && direction === desire) {
+    cells[x][y].cat = true;
+    cells[x][y].block.classList.add("circle");
+  }
+  hash[[x, y]] = true;
+  for (let i = 0; i < dirs.length; i++) {
+    if (len === 0 || (len === 1 && cells[x][y].cat)) {
+      if (len !== 0 && direction === dirsLabels[i]) {
+        cells[x][y].cat = false;
+        cells[x][y].block.classList.remove("circle");
       }
-    } else {
-      return;
+      dfs(
+        x + dirs[i][0],
+        y + dirs[i][1],
+        len === 0 ? dirsLabels[i] : direction,
+        len + 1,
+        hash,
+        dirsLabels[i]
+      );
     }
   }
-  // if (len === 2) {
-  //   cells[x][y].cat = true;
-  //   cells[x][y].block.classList.add("circle");
-  // }
 }
