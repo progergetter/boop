@@ -85,7 +85,7 @@ function dfs(x, y, direction, len, hash, desire) {
     hash.hasOwnProperty([x, y])
   )
     return;
-  if (len === 2 && direction === desire) {
+  if (len === 2 && direction === desire && cells[x][y].cat === false) {
     cells[x][y].cat = true;
     cells[x][y].block.classList.add("circle");
   }

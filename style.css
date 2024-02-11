@@ -6,4 +6,5 @@
   background-color: red;
   border: 1cm;
   border-radius: 50%;
+  pointer-events: none;
 }
