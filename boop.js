@@ -3,17 +3,18 @@ document.body.onload = init;
 const n = 6;
 const m = 6;
 let index = 0;
+const counterBox = document.getElementById("tool");
 
 class Cell {
   id;
   block;
   color;
-  cat;
+  kitten;
 
   constructor() {
     this.id = index++;
     this.color = "#3cbdff";
-    this.cat = false;
+    this.kitten = false;
   }
 }
 
@@ -42,7 +43,7 @@ function init() {
       td.setAttribute("text-align", "-moz-center;");
       td.setAttribute("id", cell.id);
       td.addEventListener("click", function () {
-        this.classList.add("circle");
+        this.classList.add("kitten");
         shift(Number(this.id));
       });
       tr.appendChild(td);
@@ -57,9 +58,12 @@ function init() {
 function shift(coord) {
   let y = Math.floor(coord / n);
   let x = coord - y * m;
-  cells[y][x].cat = true;
-  cells[y][x].block.classList.add("circle");
-  dfs(y, x, 0, "");
+  cells[y][x].kitten = true;
+  cells[y][x].block.classList.add("kitten");
+  for (let i = 0; i < dirs.length; i++) {
+    dfs(y, x, 0, i);
+  }
+  counterBox.innerText = document.getElementsByClassName("kitten").length;
 }
 
 const dirs = [
@@ -74,17 +78,12 @@ const dirs = [
 ];
 
 function dfs(x, y, len, directionIndex) {
-  if (directionIndex === "") {
-    for (let i = 0; i < dirs.length; i++) {
-      dfs(x, y, len, i);
-    }
-  }
   if (x < 0 || x === n || y < 0 || y === m || len == 3) return true;
-  if (len === 1 && cells[x][y].cat === false) return false;
+  if (len === 1 && cells[x][y].kitten === false) return false;
   if (len === 2) {
-    if (cells[x][y].cat === true) return false;
-    cells[x][y].cat = true;
-    cells[x][y].block.classList.add("circle");
+    if (cells[x][y].kitten === true) return false;
+    cells[x][y].kitten = true;
+    cells[x][y].block.classList.add("kitten");
     return true;
   }
   if (
@@ -96,8 +95,8 @@ function dfs(x, y, len, directionIndex) {
     )
   ) {
     if (len === 1) {
-      cells[x][y].cat = false;
-      cells[x][y].block.classList.remove("circle");
+      cells[x][y].kitten = false;
+      cells[x][y].block.classList.remove("kitten");
     }
   }
   return true;
