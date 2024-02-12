@@ -3,8 +3,8 @@ document.body.onload = init;
 const n = 6;
 const m = 6;
 let index = 0;
-const counterBox = document.getElementById("tool");
-
+const kittenCounter = document.getElementById("tool");
+const color = generateColor();
 class Cell {
   id;
   block;
@@ -13,7 +13,7 @@ class Cell {
 
   constructor() {
     this.id = index++;
-    this.color = "#3cbdff";
+    this.color = "#" + color;
     this.kitten = false;
   }
 }
@@ -63,7 +63,9 @@ function shift(coord) {
   for (let i = 0; i < dirs.length; i++) {
     dfs(y, x, 0, i);
   }
-  counterBox.innerText = document.getElementsByClassName("kitten").length;
+  kittenCounter.innerText = `Kittens: ${
+    document.getElementsByClassName("kitten").length
+  }`;
 }
 
 const dirs = [
