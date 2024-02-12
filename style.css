@@ -7,3 +7,12 @@
   border-radius: 50%;
   pointer-events: none;
 }
+
+.cat {
+  margin-top: 50%;
+  margin-left: 50%;
+  border: 1cm;
+  background-color: chartreuse;
+  border-radius: 50%;
+  pointer-events: none;
+}
