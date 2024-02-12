@@ -57,19 +57,19 @@ function init() {
 }
 
 function shift(coord) {
-  let y = Math.floor(coord / n);
-  let x = coord - y * m;
-  cells[y][x].kitten = true;
-  cells[y][x].block.classList.add("kitten");
+  let x = Math.floor(coord / n);
+  let y = coord - x * m;
+  cells[x][y].kitten = true;
+  cells[x][y].block.classList.add("kitten");
   let tripleFound = false;
   let points = [];
   for (let i = 0; tripleFound === false && i < dirs.length; i++) {
-    let res = checkTriple(y, x, 0, i);
+    let res = checkTriple(x, y, 0, i);
     tripleFound = tripleFound || res;
   }
   if (tripleFound === false) {
     for (let i = 0; i < dirs.length; i++) {
-      dfs(y, x, 0, i, points);
+      dfs(x, y, 0, i, points);
     }
     for (let i = 0; i < points.length; i++) {
       for (let j = 0; tripleFound === false && j < dirs.length; j++) {
