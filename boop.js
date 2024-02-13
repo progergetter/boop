@@ -29,7 +29,6 @@ function init() {
   const mainBlock = document.getElementById("board");
   const table = document.createElement("table");
   const tableBody = document.createElement("tbody");
-  table.setAttribute("border", "1");
   for (let i = 0; i < n; i++) {
     let tr = document.createElement("tr");
     const row = [];
@@ -38,13 +37,10 @@ function init() {
       row.push(cell);
       let td = document.createElement("td");
       cell.block = td;
-      td.setAttribute("width", "50px");
       td.setAttribute("bgcolor", cell.color);
-      td.setAttribute("height", "50px");
-      td.setAttribute("text-align", "-moz-center;");
       td.setAttribute("id", cell.id);
       td.addEventListener("click", function () {
-        this.classList.add("kitten");
+        this.classList.add("kitten1");
         shift(Number(this.id));
       });
       tr.appendChild(td);
@@ -60,27 +56,29 @@ function shift(coord) {
   let x = Math.floor(coord / n);
   let y = coord - x * m;
   cells[x][y].kitten = true;
-  cells[x][y].block.classList.add("kitten");
+  cells[x][y].block.classList.add("kitten1");
   let tripleFound = false;
-  let points = [];
-  for (let i = 0; tripleFound === false && i < dirs.length; i++) {
-    let res = checkTriple(x, y, 0, i);
-    tripleFound = tripleFound || res;
-  }
+  tripleHelper(tripleFound);
   if (tripleFound === false) {
     for (let i = 0; i < dirs.length; i++) {
-      dfs(x, y, 0, i, points);
+      dfs(x, y, 0, i);
     }
-    for (let i = 0; i < points.length; i++) {
-      for (let j = 0; tripleFound === false && j < dirs.length; j++) {
-        let res = checkTriple(points[i][0], points[i][1], 0, j);
+    tripleHelper(tripleFound);
+  }
+  kittenCounter.innerText = `Kittens: ${
+    document.getElementsByClassName("kitten1").length
+  }`;
+}
+
+function tripleHelper(tripleFound) {
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      for (let k = 0; tripleFound === false && k < dirs.length; k++) {
+        let res = checkTriple(i, j, 0, k);
         tripleFound = tripleFound || res;
       }
     }
   }
-  kittenCounter.innerText = `Kittens: ${
-    document.getElementsByClassName("kitten").length
-  }`;
 }
 
 const dirs = [
@@ -95,7 +93,7 @@ const dirs = [
 ];
 
 function checkTriple(x, y, len, directionIndex) {
-  if (len === 3) return true;
+  if (len === 4) return true;
   if (x < 0 || x === n || y < 0 || y === m) return false;
   if (len > 0 && cells[x][y].kitten === false) return false;
   let res = checkTriple(
@@ -106,19 +104,18 @@ function checkTriple(x, y, len, directionIndex) {
   );
   if (res === true) {
     cells[x][y].kitten = false;
-    cells[x][y].block.classList.remove("kitten");
+    cells[x][y].block.classList.remove("kitten1");
   }
   return res;
 }
 
-function dfs(x, y, len, directionIndex, points) {
+function dfs(x, y, len, directionIndex) {
   if (x < 0 || x === n || y < 0 || y === m || len == 3) return true;
   if (len === 1 && cells[x][y].kitten === false) return false;
   if (len === 2) {
     if (cells[x][y].kitten === true) return false;
     cells[x][y].kitten = true;
-    cells[x][y].block.classList.add("kitten");
-    points.push([x, y]);
+    cells[x][y].block.classList.add("kitten1");
     return true;
   }
   if (
@@ -126,13 +123,12 @@ function dfs(x, y, len, directionIndex, points) {
       x + dirs[directionIndex][0],
       y + dirs[directionIndex][1],
       len + 1,
-      directionIndex,
-      points
+      directionIndex
     )
   ) {
     if (len === 1) {
       cells[x][y].kitten = false;
-      cells[x][y].block.classList.remove("kitten");
+      cells[x][y].block.classList.remove("kitten1");
     }
   }
   return true;

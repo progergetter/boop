@@ -1,10 +1,19 @@
-.kitten {
-  background-size: 100% 100%;
-  margin-top: 50%;
-  margin-left: 50%;
-  border: 1cm;
-  background-image: url("kitten.png");
-  border-radius: 50%;
+/* body {
+  background-image: url("background.jpg");
+  background-position: center;
+  background-size: 45%;
+  background-repeat: no-repeat;
+} */
+
+.kitten1 {
+  background-size: 51px 51px;
+  background-image: url("kittenPlayer1.jpg");
+  pointer-events: none;
+}
+
+.kitten2 {
+  background-size: 50px 50px;
+  background-image: url("kittenPlayer2.jpg");
   pointer-events: none;
 }
 
@@ -15,4 +24,17 @@
   background-color: chartreuse;
   border-radius: 50%;
   pointer-events: none;
+}
+
+table {
+  margin-top: 8%;
+  margin-left: 37.8%;
+}
+
+td {
+  display: inline-block;
+  border-radius: 5px;
+  border: 1px solid white;
+  width: 50px;
+  height: 50px;
 }
