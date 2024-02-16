@@ -6,14 +6,26 @@
 } */
 
 .kitten1 {
-  background-size: 51px 51px;
+  background-size: 52px 52px;
   background-image: url("kittenPlayer1.jpg");
   pointer-events: none;
 }
 
 .kitten2 {
-  background-size: 50px 50px;
+  background-size: 52px 52px;
   background-image: url("kittenPlayer2.jpg");
+  pointer-events: none;
+}
+
+.cat1 {
+  background-size: 52px 52px;
+  background-image: url("catPlayer1.jpg");
+  pointer-events: none;
+}
+
+.cat2 {
+  background-size: 52px 52px;
+  background-image: url("catPlayer2.jpg");
   pointer-events: none;
 }
 
@@ -33,7 +45,7 @@ table {
 
 td {
   display: inline-block;
-  border-radius: 5px;
+  border-radius: 12px;
   border: 1px solid white;
   width: 50px;
   height: 50px;
