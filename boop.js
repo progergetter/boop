@@ -22,6 +22,7 @@ const dirs = [
   [-1, 1],
   [-1, -1],
 ];
+const catTypes = ["kitten1", "kitten2", "cat1", "cat2"];
 
 class Cell {
   id;
@@ -63,7 +64,7 @@ function init() {
       // left click
       td.addEventListener("click", function () {
         this.classList.add("kitten" + turn);
-        shift(Number(this.id));
+        shift(Number(this.id), "kitten");
         changeTurn();
       });
       // right click
@@ -71,9 +72,11 @@ function init() {
         "contextmenu",
         function (ev) {
           ev.preventDefault();
-          if (turn === 1 ? cats1 > 0 : cats2 > 0) {
+          let currCount = turn === 1 ? cats1 : cats2;
+          if (currCount > 0) {
             this.classList.add("cat" + turn);
-            shift(Number(this.id));
+            shift(Number(this.id), "cat");
+            decreaseCatCount();
             changeTurn();
           }
           return false;
@@ -87,6 +90,11 @@ function init() {
   }
   table.appendChild(tableBody);
   mainBlock.appendChild(table);
+}
+
+function decreaseCatCount() {
+  if (turn === 1) cats1--;
+  else cats2--;
 }
 
 function updateKittensCounter() {
@@ -105,15 +113,16 @@ function updateCatsCounter() {
   catsCounter.innerText = player1Cats + "\n" + player2Cats;
 }
 
-function shift(coord) {
+function shift(coord, type) {
   let x = Math.floor(coord / n);
   let y = coord - x * m;
-  cells[x][y].kitten = true;
-  cells[x][y].block.classList.add("kitten" + turn);
+  if (type === "kitten") cells[x][y].kitten = true;
+  else cells[x][y].cat = true;
+  cells[x][y].block.classList.add(type + turn);
   let tripleFound = tripleHelper();
   if (tripleFound === false) {
     for (let i = 0; i < dirs.length; i++) {
-      dfs(x, y, 0, i, "");
+      dfs(x, y, 0, i, type, type + turn);
     }
     tripleHelper();
   }
@@ -158,33 +167,46 @@ function checkTriple(x, y, len, directionIndex) {
   return res;
 }
 
-function dfs(x, y, len, directionIndex, turn) {
+function determineCatType(cell) {
+  for (let catType of catTypes) {
+    if (cell.block.classList.contains(catType) === true) {
+      return catType;
+    }
+  }
+  return null;
+}
+
+function dfs(x, y, len, directionIndex, startType, catType) {
   if (x < 0 || x === n || y < 0 || y === m || len == 3) return true;
-  if (len === 1 && cells[x][y].kitten === false) return false;
+  if (
+    len === 1 &&
+    ((cells[x][y].kitten === false && cells[x][y].cat === false) ||
+      (startType === "kitten" && cells[x][y].cat === true))
+  )
+    return false;
   if (len === 2) {
     if (cells[x][y].kitten === true) return false;
-    cells[x][y].kitten = true;
-    cells[x][y].block.classList.add("kitten" + turn);
+    if (startType === "kitten") cells[x][y].kitten = true;
+    else cells[x][y].cat = true;
+    cells[x][y].block.classList.add(catType);
     return true;
   }
-  let currTurn =
-    len === 1
-      ? cells[x][y].block.classList.contains("kitten1") === true
-        ? 1
-        : 2
-      : turn;
+  let currCatType = len === 1 ? determineCatType(cells[x][y]) : catType;
+  let currType = currCatType.substring(0, currCatType.length - 1);
   if (
     dfs(
       x + dirs[directionIndex][0],
       y + dirs[directionIndex][1],
       len + 1,
       directionIndex,
-      currTurn
+      currType,
+      currCatType
     )
   ) {
     if (len === 1) {
-      cells[x][y].kitten = false;
-      cells[x][y].block.classList.remove("kitten" + currTurn);
+      if (currType === "kitten") cells[x][y].kitten = false;
+      else cells[x][y].cat = false;
+      cells[x][y].block.classList.remove(currCatType);
     }
   }
   return true;
