@@ -1,9 +1,16 @@
-/* body {
-  background-image: url("background.jpg");
-  background-position: center;
-  background-size: 45%;
-  background-repeat: no-repeat;
-} */
+@import url("https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap");
+
+body {
+  font-family: "Press Start 2P", sans-serif;
+  font-weight: 400;
+  height: 100vh;
+  width: 100vh;
+  color: #333;
+  background-image: linear-gradient(to top left, #753682 0%, #bf2e34 100%);
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+}
 
 .kitten1 {
   background-size: 52px 52px;
@@ -39,8 +46,9 @@
 }
 
 table {
-  margin-top: 8%;
-  margin-left: 37.8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 td {

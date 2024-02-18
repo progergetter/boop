@@ -5,7 +5,6 @@ let turn = 1;
 let cats1 = 0;
 let cats2 = 0;
 let kittenLimit = 8;
-let catLimit = 3;
 let cells = [];
 const n = 6;
 const m = 6;
@@ -28,13 +27,12 @@ class Cell {
   id;
   block;
   color;
-  kitten;
+  type;
 
   constructor() {
     this.id = index++;
     this.color = "#" + color;
-    this.kitten = false;
-    this.cat = false;
+    this.type = undefined;
   }
 }
 
@@ -108,61 +106,68 @@ function updateKittensCounter() {
 }
 
 function updateCatsCounter() {
-  let player1Cats = `Player's 1 Cats: ${cats1} / ${catLimit}`;
-  let player2Cats = `Player's 2 Cats: ${cats2} / ${catLimit}`;
+  let player1Cats = `Player's 1 Cats: ${
+    document.getElementsByClassName("cat1").length
+  } / ${cats1}`;
+  let player2Cats = `Player's 2 Cats: ${
+    document.getElementsByClassName("cat2").length
+  } / ${cats2}`;
   catsCounter.innerText = player1Cats + "\n" + player2Cats;
 }
 
 function shift(coord, type) {
   let x = Math.floor(coord / n);
   let y = coord - x * m;
-  if (type === "kitten") cells[x][y].kitten = true;
-  else cells[x][y].cat = true;
+  cells[x][y].type = type;
   cells[x][y].block.classList.add(type + turn);
-  let tripleFound = tripleHelper();
+  let tripleFound = tripleHelper(type);
   if (tripleFound === false) {
     for (let i = 0; i < dirs.length; i++) {
       dfs(x, y, 0, i, type, type + turn);
     }
-    tripleHelper();
+    tripleHelper(type);
   }
   updateKittensCounter();
+  updateCatsCounter();
 }
 
-function tripleHelper() {
+function tripleHelper(type) {
   let res = false;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       for (let k = 0; k < dirs.length; k++) {
-        res = res || checkTriple(i, j, 0, k);
+        res = res || checkTriple(i, j, 0, k, type);
       }
     }
   }
   return res;
 }
 
-function checkTriple(x, y, len, directionIndex) {
+function checkTriple(x, y, len, directionIndex, type) {
   if (len === 3) return true;
   if (x < 0 || x === n || y < 0 || y === m) return false;
   if (
-    cells[x][y].kitten === false ||
-    cells[x][y].block.classList.contains("kitten" + turn) === false
+    cells[x][y].type === undefined ||
+    cells[x][y].block.classList.contains(type + turn) === false
   )
     return false;
   let res = checkTriple(
     x + dirs[directionIndex][0],
     y + dirs[directionIndex][1],
     len + 1,
-    directionIndex
+    directionIndex,
+    type
   );
   if (res === true) {
     if (len === 0) {
       if (turn === 1) cats1++;
       else cats2++;
       updateCatsCounter();
+    } else if (len === 2 && type === "cat") {
+      console.log(`${turn} player win!`);
     }
-    cells[x][y].kitten = false;
-    cells[x][y].block.classList.remove("kitten" + turn);
+    cells[x][y].type = undefined;
+    cells[x][y].block.classList.remove(type + turn);
   }
   return res;
 }
@@ -180,14 +185,13 @@ function dfs(x, y, len, directionIndex, startType, catType) {
   if (x < 0 || x === n || y < 0 || y === m || len == 3) return true;
   if (
     len === 1 &&
-    ((cells[x][y].kitten === false && cells[x][y].cat === false) ||
-      (startType === "kitten" && cells[x][y].cat === true))
+    (cells[x][y].type === undefined ||
+      (startType === "kitten" && cells[x][y].type === "cat"))
   )
     return false;
   if (len === 2) {
-    if (cells[x][y].kitten === true) return false;
-    if (startType === "kitten") cells[x][y].kitten = true;
-    else cells[x][y].cat = true;
+    if (cells[x][y].type === "kitten") return false;
+    cells[x][y].type = startType;
     cells[x][y].block.classList.add(catType);
     return true;
   }
@@ -204,8 +208,7 @@ function dfs(x, y, len, directionIndex, startType, catType) {
     )
   ) {
     if (len === 1) {
-      if (currType === "kitten") cells[x][y].kitten = false;
-      else cells[x][y].cat = false;
+      cells[x][y].type = undefined;
       cells[x][y].block.classList.remove(currCatType);
     }
   }
