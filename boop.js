@@ -6,6 +6,7 @@ let cats1 = 0;
 let cats2 = 0;
 let kittenLimit = 8;
 let cells = [];
+let table = undefined;
 const n = 6;
 const m = 6;
 const kittenCounter = document.getElementById("kittens");
@@ -21,7 +22,6 @@ const dirs = [
   [-1, 1],
   [-1, -1],
 ];
-const catTypes = ["kitten1", "kitten2", "cat1", "cat2"];
 
 class Cell {
   id;
@@ -47,7 +47,7 @@ function changeTurn() {
 
 function init() {
   const mainBlock = document.getElementById("board");
-  const table = document.createElement("table");
+  table = document.createElement("table");
   const tableBody = document.createElement("tbody");
   for (let i = 0; i < n; i++) {
     let tr = document.createElement("tr");
@@ -164,21 +164,13 @@ function checkTriple(x, y, len, directionIndex, type) {
       else cats2++;
       updateCatsCounter();
     } else if (len === 2 && type === "cat") {
+      table.classList.add("lock");
       console.log(`${turn} player win!`);
     }
     cells[x][y].type = undefined;
     cells[x][y].block.classList.remove(type + turn);
   }
   return res;
-}
-
-function determineCatType(cell) {
-  for (let catType of catTypes) {
-    if (cell.block.classList.contains(catType) === true) {
-      return catType;
-    }
-  }
-  return null;
 }
 
 function dfs(x, y, len, directionIndex, startType, catType) {
@@ -195,15 +187,14 @@ function dfs(x, y, len, directionIndex, startType, catType) {
     cells[x][y].block.classList.add(catType);
     return true;
   }
-  let currCatType = len === 1 ? determineCatType(cells[x][y]) : catType;
-  let currType = currCatType.substring(0, currCatType.length - 1);
+  let currCatType = len === 1 ? cells[x][y].block.classList.value : catType;
   if (
     dfs(
       x + dirs[directionIndex][0],
       y + dirs[directionIndex][1],
       len + 1,
       directionIndex,
-      currType,
+      cells[x][y].type,
       currCatType
     )
   ) {

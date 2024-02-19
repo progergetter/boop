@@ -1,37 +1,37 @@
 @import url("https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap");
 
+html,
 body {
   font-family: "Press Start 2P", sans-serif;
   font-weight: 400;
-  height: 100vh;
-  width: 100vh;
-  color: #333;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.795);
   background-image: linear-gradient(to top left, #753682 0%, #bf2e34 100%);
-  /* display: flex; */
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .kitten1 {
-  background-size: 52px 52px;
+  background-size: 73px 73px;
   background-image: url("kittenPlayer1.jpg");
   pointer-events: none;
 }
 
 .kitten2 {
-  background-size: 52px 52px;
+  background-size: 73px 73px;
   background-image: url("kittenPlayer2.jpg");
   pointer-events: none;
 }
 
 .cat1 {
-  background-size: 52px 52px;
+  background-size: 73px 73px;
   background-image: url("catPlayer1.jpg");
   pointer-events: none;
 }
 
 .cat2 {
-  background-size: 52px 52px;
+  background-size: 73px 73px;
   background-image: url("catPlayer2.jpg");
   pointer-events: none;
 }
@@ -55,6 +55,14 @@ td {
   display: inline-block;
   border-radius: 12px;
   border: 1px solid white;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
+}
+
+.lock {
+  pointer-events: none;
+}
+
+.text {
+  margin-top: 2%;
 }
