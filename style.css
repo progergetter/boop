@@ -6,10 +6,19 @@ body {
   font-weight: 400;
   height: 100%;
   color: rgba(255, 255, 255, 0.795);
-  background-image: linear-gradient(to top left, #753682 0%, #bf2e34 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.playerTurn1 {
+  background-image: linear-gradient(to top left, #753682 0%, #bf2e34 100%);
+  transition: background-color 1000ms;
+}
+
+.playerTurn2 {
+  background-image: linear-gradient(to top left, #36826f 0%, #bfb52e 100%);
+  transition: background-color 1000ms;
 }
 
 .kitten1 {
@@ -52,7 +61,7 @@ table {
 }
 
 td {
-  display: inline-block;
+  /* display: inline-block; */
   border-radius: 12px;
   border: 1px solid white;
   width: 70px;

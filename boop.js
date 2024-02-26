@@ -4,12 +4,16 @@ let index = 0;
 let turn = 1;
 let cats1 = 0;
 let cats2 = 0;
-let kittenLimit = 8;
+let kittens1Available = 8;
+let kittens2Available = 8;
+let cats1Available = 0;
+let cats2Available = 0;
 let cells = [];
 let table = undefined;
 const n = 6;
 const m = 6;
 const kittenCounter = document.getElementById("kittens");
+const body = document.body;
 const catsCounter = document.getElementById("cats");
 const color = generateColor();
 const dirs = [
@@ -41,13 +45,16 @@ function generateColor() {
 }
 
 function changeTurn() {
+  body.classList.toggle("playerTurn" + turn);
   if (turn === 1) turn = 2;
   else turn = 1;
+  body.classList.toggle("playerTurn" + turn);
 }
 
 function init() {
   const mainBlock = document.getElementById("board");
   table = document.createElement("table");
+  body.classList.toggle("playerTurn" + turn);
   const tableBody = document.createElement("tbody");
   for (let i = 0; i < n; i++) {
     let tr = document.createElement("tr");
@@ -70,11 +77,9 @@ function init() {
         "contextmenu",
         function (ev) {
           ev.preventDefault();
-          let currCount = turn === 1 ? cats1 : cats2;
-          if (currCount > 0) {
+          if (isCatMovePossible()) {
             this.classList.add("cat" + turn);
             shift(Number(this.id), "cat");
-            decreaseCatCount();
             changeTurn();
           }
           return false;
@@ -96,23 +101,29 @@ function decreaseCatCount() {
 }
 
 function updateKittensCounter() {
-  let player1Kittens = `Player's 1 Kittens: ${
-    document.getElementsByClassName("kitten1").length
-  } / ${kittenLimit}`;
-  let player2Kittens = `Player's 2 Kittens: ${
-    document.getElementsByClassName("kitten2").length
-  } / ${kittenLimit}`;
-  kittenCounter.innerText = player1Kittens + "\n" + player2Kittens;
+  let player1KittensLen = document.getElementsByClassName("kitten1").length;
+  let player2KittensLen = document.getElementsByClassName("kitten2").length;
+  let player1KittensOutcome = `Player's 1 Kittens: ${player1KittensLen} / ${kittens1Available}`;
+  let player2KittensOutcome = `Player's 2 Kittens: ${player2KittensLen} / ${kittens2Available}`;
+  if (player1KittensLen === 8 || player2KittensLen === 8) {
+    table.classList.add("lock");
+  }
+  kittenCounter.innerText =
+    player1KittensOutcome + "\n" + player2KittensOutcome;
 }
 
 function updateCatsCounter() {
-  let player1Cats = `Player's 1 Cats: ${
-    document.getElementsByClassName("cat1").length
-  } / ${cats1}`;
-  let player2Cats = `Player's 2 Cats: ${
-    document.getElementsByClassName("cat2").length
-  } / ${cats2}`;
-  catsCounter.innerText = player1Cats + "\n" + player2Cats;
+  let player1CatsLen = document.getElementsByClassName("cat1").length;
+  let player2CatsLen = document.getElementsByClassName("cat2").length;
+  let player1CatsOutcome = `Player's 1 Cats: ${player1CatsLen} / ${cats1Available}`;
+  let player2CatsOutcome = `Player's 2 Cats: ${player2CatsLen} / ${cats2Available}`;
+  catsCounter.innerText = player1CatsOutcome + "\n" + player2CatsOutcome;
+}
+
+function isCatMovePossible() {
+  let currCatsLen = document.getElementsByClassName("cat" + turn).length;
+  let currAvailableCatsLen = turn === 1 ? cats1Available : cats2Available;
+  return currAvailableCatsLen > currCatsLen;
 }
 
 function shift(coord, type) {
@@ -128,6 +139,7 @@ function shift(coord, type) {
     tripleHelper(type);
   }
   updateKittensCounter();
+  if (type === "cat") decreaseCatCount();
   updateCatsCounter();
 }
 
@@ -160,15 +172,17 @@ function checkTriple(x, y, len, directionIndex, type) {
   );
   if (res === true) {
     if (len === 0) {
-      if (turn === 1) cats1++;
-      else cats2++;
+      if (turn === 1) cats1Available = ++cats1;
+      else cats2Available = ++cats2;
       updateCatsCounter();
     } else if (len === 2 && type === "cat") {
       table.classList.add("lock");
       console.log(`${turn} player win!`);
     }
-    cells[x][y].type = undefined;
-    cells[x][y].block.classList.remove(type + turn);
+    if (type === "kitten") {
+      cells[x][y].type = undefined;
+      cells[x][y].block.classList.remove(type + turn);
+    }
   }
   return res;
 }
