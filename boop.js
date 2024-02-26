@@ -196,7 +196,7 @@ function dfs(x, y, len, directionIndex, startType, catType) {
   )
     return false;
   if (len === 2) {
-    if (cells[x][y].type === "kitten") return false;
+    if (cells[x][y].type !== undefined) return false;
     cells[x][y].type = startType;
     cells[x][y].block.classList.add(catType);
     return true;
