@@ -22,25 +22,25 @@ body {
 }
 
 .kitten1 {
-  background-size: 73px 73px;
+  background-size: 4.6em 4.6em;
   background-image: url("kittenPlayer1.jpg");
   pointer-events: none;
 }
 
 .kitten2 {
-  background-size: 73px 73px;
+  background-size: 4.6em 4.6em;
   background-image: url("kittenPlayer2.jpg");
   pointer-events: none;
 }
 
 .cat1 {
-  background-size: 73px 73px;
+  background-size: 4.6em 4.6em;
   background-image: url("catPlayer1.jpg");
   pointer-events: none;
 }
 
 .cat2 {
-  background-size: 73px 73px;
+  background-size: 4.6em 4.6em;
   background-image: url("catPlayer2.jpg");
   pointer-events: none;
 }
@@ -62,10 +62,10 @@ table {
 
 td {
   /* display: inline-block; */
-  border-radius: 12px;
+  border-radius: 0.7em;
   border: 1px solid white;
-  width: 70px;
-  height: 70px;
+  width: 4.5em;
+  height: 4.5em;
 }
 
 .lock {
